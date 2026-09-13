@@ -21,7 +21,7 @@ MODEL_ROOT = Path(
 
 # Hugging Face Hub model repo the deployed weights are uploaded to / fetched
 # from. Override with the HF_MODEL_REPO env var if you use a different repo id.
-HF_MODEL_REPO = os.environ.get("HF_MODEL_REPO", "majedul0/neonatal-pneumonia-cnn-weights")
+HF_MODEL_REPO = os.environ.get("HF_MODEL_REPO", "Majedul/neonatal-pneumonia-cnn-weights")
 
 MODEL_FILES = {
     "VGG16": "VGG16/VGG16_final.keras",
