@@ -2,8 +2,9 @@
 .claude
 .gitignore
 
-# Large local artifacts -- not needed in the build context; weights are fetched
-# from Hugging Face Hub during the build instead (see webapp/download_models.py)
+# Large local artifacts -- excluded from the build context to keep builds fast;
+# docker-compose.yml bind-mounts the real Results/ folder into the container
+# at runtime instead, so the model weights never need to be in the image.
 Results-20260913T045822Z-1-001.zip
 Results-20260913T045822Z-1-001/Results/**/*.keras
 Results-20260913T045822Z-1-001/Results/**/*.h5

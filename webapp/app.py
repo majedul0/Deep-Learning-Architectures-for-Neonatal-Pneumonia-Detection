@@ -34,11 +34,18 @@ from tensorflow.keras.applications import (
 )
 from tensorflow.keras.models import Model, load_model
 
-from hf_config import MODEL_FILES, MODEL_ROOT
-
 BASE_DIR = Path(__file__).resolve().parent
 UPLOAD_DIR = BASE_DIR / "static" / "uploads"
 UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
+
+# Results-20260913T045822Z-1-001/Results lives one level up from webapp/.
+# Override with the MODEL_ROOT env var if the Results folder is moved elsewhere.
+MODEL_ROOT = Path(
+    os.environ.get(
+        "MODEL_ROOT",
+        BASE_DIR.parent / "Results-20260913T045822Z-1-001" / "Results",
+    )
+)
 
 IMG_SIZE = (224, 224)
 # Alphabetical order, matching tf.keras.utils.image_dataset_from_directory's
@@ -51,6 +58,15 @@ RESEARCH_TITLE = (
     "Deep Learning Architectures for Neonatal Pneumonia Detection in Chest "
     "X-ray Images: A Bias-Aware Comparison of Five CNN Backbones"
 )
+
+MODEL_FILES = {
+    "VGG16": "VGG16/VGG16_final.keras",
+    "ResNet50": "ResNet50/ResNet50_final.keras",
+    "DenseNet121": "DenseNet121/DenseNet121_final.keras",
+    "EfficientNetB0": "EfficientNetB0/EfficientNetB0_final.keras",
+    "MobileNetV2": "MobileNetV2/MobileNetV2_final.keras",
+    "CustomCNN": "CustomCNN/CustomCNN_final.keras",
+}
 
 # The five backbones named in the research title (transfer learning); CustomCNN
 # is the from-scratch baseline used for comparison, not one of "the five".

@@ -1,0 +1,8 @@
+services:
+  web:
+    build: .
+    ports:
+      - "8000:7860"
+    volumes:
+      - ./webapp/static/uploads:/app/webapp/static/uploads
+      - ./Results-20260913T045822Z-1-001/Results:/app/Results-20260913T045822Z-1-001/Results:ro

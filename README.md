@@ -1,13 +1,3 @@
----
-title: Neonatal Pneumonia Detection
-emoji: 🩺
-colorFrom: gray
-colorTo: gray
-sdk: docker
-app_port: 7860
-pinned: false
----
-
 # Deep Learning Architectures for Neonatal Pneumonia Detection in Chest X-ray Images: A Bias-Aware Comparison of Five CNN Backbones
 
 Pediatric chest X-ray pneumonia classification research, comparing five transfer-learning

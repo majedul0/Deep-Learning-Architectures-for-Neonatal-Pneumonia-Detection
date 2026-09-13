@@ -1,5 +1,8 @@
-# Hugging Face Spaces (Docker SDK) deployment for the pneumonia classifier dashboard.
-# See webapp/README.md for the full setup steps (upload weights, create the Space, push).
+# Local Docker run for the pneumonia classifier dashboard.
+# Model weights are NOT baked into the image (kept the build fast) -- mount
+# your local Results-20260913T045822Z-1-001/Results folder into the container
+# at runtime instead. See docker-compose.yml, or run directly with:
+#   docker run -p 8000:7860 -v "$(pwd)/Results-20260913T045822Z-1-001/Results:/app/Results-20260913T045822Z-1-001/Results:ro" <image>
 
 FROM python:3.12-slim
 
@@ -14,11 +17,6 @@ COPY webapp/requirements.txt webapp/requirements.txt
 RUN pip install --no-cache-dir -r webapp/requirements.txt
 
 COPY . .
-
-# Bake the trained model weights into the image at build time, fetched from the
-# public Hugging Face Hub model repo configured in webapp/hf_config.py -- this
-# keeps the running container self-contained (no runtime network dependency).
-RUN python webapp/download_models.py
 
 ENV PORT=7860
 EXPOSE 7860
