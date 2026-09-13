@@ -1,0 +1,17 @@
+{
+  "python_version": "3.13.15",
+  "tensorflow_version": "2.20.0",
+  "gpu": "[]",
+  "image_size": [
+    224,
+    224
+  ],
+  "batch_size": 32,
+  "epochs_phase1_max": 15,
+  "epochs_phase2_max": 15,
+  "lr_phase1": 0.001,
+  "lr_phase2": 1e-05,
+  "finetune_unfrozen_layers": 30,
+  "early_stopping_patience": 5,
+  "random_seed": 42
+}

@@ -1,0 +1,10 @@
+{
+  "model": "EfficientNetB0",
+  "phase": "finetuned",
+  "accuracy": 0.946969696969697,
+  "precision": 0.9502189686206832,
+  "recall": 0.946969696969697,
+  "f1": 0.9468312153796025,
+  "roc_auc": 0.9951584198204979,
+  "avg_precision": 0.9959252205377677
+}

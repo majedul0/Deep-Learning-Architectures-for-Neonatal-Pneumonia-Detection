@@ -1,0 +1,28 @@
+# Trained model weights/checkpoints -- several exceed GitHub's 100MB file limit
+# (e.g. VGG16/ResNet50 fine-tuned weights are 170-200+ MB) and together add up
+# to gigabytes. Metrics, reports and charts in Results/ are still tracked.
+*.keras
+*.h5
+Results-20260913T045822Z-1-001.zip
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Flask runtime uploads (user-submitted images generated at request time)
+webapp/static/uploads/*
+!webapp/static/uploads/.gitkeep
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+
+# Claude Code local session state
+.claude/

@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% block title %}Report &mdash; Neonatal Pneumonia Detection{% endblock %}
+{% block content %}
+  <header class="page-header">
+    <h1>Analysis Report</h1>
+    <p>Generated {{ analyzed_at }}</p>
+  </header>
+
+  <section class="card">
+    <h2 class="card-title">Patient</h2>
+    <div class="patient-summary">
+      <div>
+        <span class="label-muted">Name</span>
+        <span class="value">{{ patient_name }}</span>
+      </div>
+      <div>
+        <span class="label-muted">Age</span>
+        <span class="value">{{ patient_age }} yrs</span>
+      </div>
+      <div>
+        <span class="label-muted">Model used</span>
+        <span class="value">{{ model_name }}</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="card verdict-card">
+    <span class="status-pill {{ 'positive' if label == 'PNEUMONIA' else 'negative' }}">
+      {{ '&#9888;' | safe if label == 'PNEUMONIA' else '&#10003;' | safe }} {{ label }}
+    </span>
+    <div class="result-meta">Model confidence: {{ confidence }}%</div>
+    <div class="confidence-bar">
+      <div class="confidence-bar-fill" style="width: {{ confidence }}%;"></div>
+    </div>
+
+    <div class="image-grid">
+      <figure>
+        <img src="{{ original_image }}" alt="Preprocessed X-ray" />
+        <figcaption>Preprocessed input (resized + CLAHE)</figcaption>
+      </figure>
+      {% if gradcam_image %}
+      <figure>
+        <img src="{{ gradcam_image }}" alt="Grad-CAM overlay" />
+        <figcaption>Grad-CAM overlay (model attention)</figcaption>
+      </figure>
+      {% else %}
+      <figure>
+        <div class="upload-drop">Grad-CAM overlay unavailable for this model.</div>
+      </figure>
+      {% endif %}
+    </div>
+  </section>
+
+  {% if benchmark %}
+  <section class="card">
+    <h2 class="card-title">{{ model_name }} &mdash; Benchmarked Test-Set Performance</h2>
+    <p class="hint">From the held-out test set evaluated in the training notebooks ({{ benchmark.phase.replace('_', ' ') }} weights, matching this deployed model).</p>
+    <div class="stat-grid">
+      <div class="stat-tile">
+        <span class="stat-value">{{ (benchmark.accuracy * 100) | round(1) }}%</span>
+        <span class="stat-label">Accuracy</span>
+      </div>
+      <div class="stat-tile">
+        <span class="stat-value">{{ (benchmark.roc_auc * 100) | round(1) }}%</span>
+        <span class="stat-label">ROC-AUC</span>
+      </div>
+      {% if benchmark.sensitivity is not none %}
+      <div class="stat-tile">
+        <span class="stat-value">{{ (benchmark.sensitivity * 100) | round(1) }}%</span>
+        <span class="stat-label">Sensitivity (pneumonia recall)</span>
+      </div>
+      <div class="stat-tile">
+        <span class="stat-value">{{ (benchmark.specificity * 100) | round(1) }}%</span>
+        <span class="stat-label">Specificity (normal recall)</span>
+      </div>
+      {% endif %}
+    </div>
+  </section>
+  {% endif %}
+
+  <a class="back-link" href="{{ url_for('index') }}">&larr; Run another analysis</a>
+{% endblock %}

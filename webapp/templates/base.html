@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{% block title %}Neonatal Pneumonia Detection{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+</head>
+<body>
+  <div class="shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <span class="brand-mark">NPD</span>
+        <div class="brand-text">
+          <span class="brand-name">Neonatal Pneumonia Detection</span>
+          <span class="brand-sub">Bias-Aware CNN Comparison</span>
+        </div>
+      </div>
+
+      <nav class="nav">
+        <a class="nav-link {{ 'active' if active_page == 'analyze' else '' }}" href="{{ url_for('index') }}">
+          <span class="nav-icon" aria-hidden="true">&#9679;</span> New Analysis
+        </a>
+        <a class="nav-link {{ 'active' if active_page == 'performance' else '' }}" href="{{ url_for('performance') }}">
+          <span class="nav-icon" aria-hidden="true">&#9632;</span> Model Performance
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <p>{{ research_title }}</p>
+        <p class="disclaimer">Research/demo tool only &mdash; not a diagnostic device.</p>
+      </div>
+    </aside>
+
+    <main class="main">
+      {% with messages = get_flashed_messages() %}
+        {% if messages %}
+          {% for message in messages %}
+            <div class="flash">{{ message }}</div>
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+      {% block content %}{% endblock %}
+    </main>
+  </div>
+</body>
+</html>

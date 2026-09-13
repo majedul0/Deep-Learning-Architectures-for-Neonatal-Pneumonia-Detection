@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+{% block title %}Model Performance &mdash; Neonatal Pneumonia Detection{% endblock %}
+{% block content %}
+  <header class="page-header">
+    <h1>Model Performance</h1>
+    <p>Held-out test-set results for the deployed weights of each model, as reported by the training notebooks.</p>
+  </header>
+
+  <section class="card">
+    <h2 class="card-title">Transfer-Learning Backbones (fine-tuned)</h2>
+    <div class="table-wrap">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Model</th>
+            <th>Accuracy</th>
+            <th>Precision</th>
+            <th>Recall</th>
+            <th>F1</th>
+            <th>ROC-AUC</th>
+            <th>Sensitivity</th>
+            <th>Specificity</th>
+            <th>Bias gap</th>
+            <th>Params</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for name in backbone_models %}
+            {% set b = benchmarks.get(name) %}
+            {% if b %}
+            <tr>
+              <td>{{ name }}</td>
+              <td>{{ (b.accuracy * 100) | round(1) }}%</td>
+              <td>{{ (b.precision * 100) | round(1) }}%</td>
+              <td>{{ (b.recall * 100) | round(1) }}%</td>
+              <td>{{ (b.f1 * 100) | round(1) }}%</td>
+              <td>{{ (b.roc_auc * 100) | round(1) }}%</td>
+              <td>{{ (b.sensitivity * 100) | round(1) if b.sensitivity is not none else '-' }}%</td>
+              <td>{{ (b.specificity * 100) | round(1) if b.specificity is not none else '-' }}%</td>
+              <td>{{ (b.bias_gap * 100) | round(1) if b.bias_gap is not none else '-' }} pts</td>
+              <td>{{ '{:,}'.format(b.total_params) if b.total_params else '-' }}</td>
+            </tr>
+            {% endif %}
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    <p class="hint">
+      "Bias gap" is |sensitivity &minus; specificity|: how much better a model is at catching PNEUMONIA
+      than confirming NORMAL, or vice versa. A large gap means the model leans toward one class rather
+      than judging both fairly &mdash; the central question this project's bias-aware comparison is built around.
+    </p>
+  </section>
+
+  <section class="card">
+    <h2 class="card-title">Baseline &mdash; Custom CNN (trained from scratch)</h2>
+    <div class="table-wrap">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Model</th>
+            <th>Accuracy</th>
+            <th>Precision</th>
+            <th>Recall</th>
+            <th>F1</th>
+            <th>ROC-AUC</th>
+            <th>Sensitivity</th>
+            <th>Specificity</th>
+            <th>Bias gap</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for name in baseline_models %}
+            {% set b = benchmarks.get(name) %}
+            {% if b %}
+            <tr>
+              <td>{{ name }}</td>
+              <td>{{ (b.accuracy * 100) | round(1) }}%</td>
+              <td>{{ (b.precision * 100) | round(1) }}%</td>
+              <td>{{ (b.recall * 100) | round(1) }}%</td>
+              <td>{{ (b.f1 * 100) | round(1) }}%</td>
+              <td>{{ (b.roc_auc * 100) | round(1) }}%</td>
+              <td>{{ (b.sensitivity * 100) | round(1) if b.sensitivity is not none else '-' }}%</td>
+              <td>{{ (b.specificity * 100) | round(1) if b.specificity is not none else '-' }}%</td>
+              <td>{{ (b.bias_gap * 100) | round(1) if b.bias_gap is not none else '-' }} pts</td>
+            </tr>
+            {% endif %}
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    <p class="hint">
+      No ImageNet weights, single training phase &mdash; the much lower accuracy here is the expected
+      result establishing that transfer learning is necessary at this dataset size, not a bug.
+    </p>
+  </section>
+{% endblock %}

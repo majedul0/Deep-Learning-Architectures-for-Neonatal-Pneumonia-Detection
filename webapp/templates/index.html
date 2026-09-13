@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block title %}New Analysis &mdash; Neonatal Pneumonia Detection{% endblock %}
+{% block content %}
+  <header class="page-header">
+    <h1>New Analysis</h1>
+    <p>Record patient details, choose a model, and upload a chest X-ray.</p>
+  </header>
+
+  <form action="{{ url_for('predict') }}" method="post" enctype="multipart/form-data">
+    <section class="card">
+      <h2 class="card-title">Patient Information</h2>
+      <div class="field-row">
+        <div class="field">
+          <label for="patient_name">Patient name</label>
+          <input type="text" name="patient_name" id="patient_name" placeholder="e.g. Baby Rahman" required />
+        </div>
+        <div class="field">
+          <label for="patient_age">Age (years)</label>
+          <input type="number" name="patient_age" id="patient_age" min="0" max="120" placeholder="e.g. 2" required />
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2 class="card-title">Model Selection</h2>
+      <div class="field">
+        <label for="model_name">Classifier</label>
+        <select name="model_name" id="model_name">
+          <optgroup label="Transfer-learning backbones (fine-tuned)">
+            {% for name in backbone_models %}
+              <option value="{{ name }}">{{ name }}</option>
+            {% endfor %}
+          </optgroup>
+          <optgroup label="Baseline (trained from scratch)">
+            {% for name in baseline_models %}
+              <option value="{{ name }}">{{ name }} (Custom CNN)</option>
+            {% endfor %}
+          </optgroup>
+        </select>
+        <p class="hint">See <a href="{{ url_for('performance') }}">Model Performance</a> for each model's benchmarked accuracy, sensitivity and specificity.</p>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2 class="card-title">Chest X-ray Image</h2>
+      <div class="field">
+        <label for="xray_image">Upload image</label>
+        <div class="upload-drop">
+          <input type="file" name="xray_image" id="xray_image" accept=".png,.jpg,.jpeg,.bmp,.tif,.tiff" required />
+        </div>
+        <p class="hint">PNG, JPG, JPEG, BMP or TIFF, up to 10 MB.</p>
+      </div>
+    </section>
+
+    <button type="submit" class="submit-btn">Run Analysis</button>
+  </form>
+{% endblock %}

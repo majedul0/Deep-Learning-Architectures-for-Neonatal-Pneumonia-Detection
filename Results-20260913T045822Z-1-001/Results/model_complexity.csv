@@ -1,0 +1,6 @@
+model,total_params,trainable_params_frozen_phase
+VGG16,14780481,65793
+ResNet50,23850113,262401
+DenseNet121,7168833,131329
+EfficientNetB0,4213668,164097
+MobileNetV2,2422081,164097
