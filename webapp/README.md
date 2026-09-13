@@ -43,7 +43,56 @@ startup is fast but the first prediction with a given model will take a few seco
 python app.py
 ```
 
-Then open http://127.0.0.1:5000 in a browser.
+Then open http://127.0.0.1:8000 in a browser. (Port 8000, not Flask's usual 5000 —
+5000 is reserved by Windows' Hyper-V/WinNAT port range on many machines; override with
+the `PORT` env var if you need a different one.)
+
+## Deploying to Hugging Face Spaces
+
+The model weight files (`*.keras`) are gitignored from this repo — several exceed
+GitHub's 100MB file limit — so they aren't available wherever this repo gets cloned.
+Deployment works around that by hosting the weights in a separate Hugging Face Hub
+**model repo** and having the Space's Docker build fetch them at build time (see
+`../Dockerfile`, `download_models.py`, `hf_config.py`). This keeps the deployed image
+self-contained (no download needed while actually serving requests) and requires no
+Git LFS or external file hosting for the main project repo.
+
+1. **Create a free Hugging Face account** at https://huggingface.co if you don't have one.
+
+2. **Upload your trained weights once** (from this project's Python environment, with
+   `huggingface_hub` installed — already in `requirements.txt`):
+
+   ```powershell
+   huggingface-cli login
+   # paste a token with WRITE access, from https://huggingface.co/settings/tokens
+   python upload_models.py
+   ```
+
+   This creates a public model repo (default id in `hf_config.py`:
+   `majedul0/neonatal-pneumonia-cnn-weights`; override with the `HF_MODEL_REPO` env var
+   for a different name) and uploads all 6 `_final.keras` files to it.
+
+3. **Create the Space**: go to https://huggingface.co/new-space, pick **Docker** as the
+   SDK, name it, choose public or private visibility, and create it. Hugging Face gives
+   you a git URL like `https://huggingface.co/spaces/<username>/<space-name>`.
+
+4. **Push this repo to the Space** as a second git remote alongside GitHub:
+
+   ```bash
+   git remote add space https://huggingface.co/spaces/<username>/<space-name>
+   git push space main
+   ```
+
+   When prompted for credentials, use your Hugging Face username and the same access
+   token as the password.
+
+5. The Space detects `sdk: docker` in the repo's root `README.md` and builds
+   `../Dockerfile` automatically — this installs dependencies, then runs
+   `download_models.py` to bake in the weights from your model repo. The first build
+   takes a few minutes (downloading TensorFlow + ~360MB of weights); after that, visit
+   the Space's URL to use the live dashboard.
+
+6. To update the live Space later, just push to it again: `git push space main`.
 
 ## Notes
 

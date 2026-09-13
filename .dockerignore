@@ -1,0 +1,24 @@
+.git
+.claude
+.gitignore
+
+# Large local artifacts -- not needed in the build context; weights are fetched
+# from Hugging Face Hub during the build instead (see webapp/download_models.py)
+Results-20260913T045822Z-1-001.zip
+Results-20260913T045822Z-1-001/Results/**/*.keras
+Results-20260913T045822Z-1-001/Results/**/*.h5
+
+# Python virtual environments
+.venv/
+webapp/.venv/
+**/__pycache__/
+*.pyc
+
+# Flask runtime uploads
+webapp/static/uploads/*
+!webapp/static/uploads/.gitkeep
+
+# Editor / OS
+.vscode/
+.DS_Store
+Thumbs.db
